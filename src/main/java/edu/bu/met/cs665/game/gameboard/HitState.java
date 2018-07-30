@@ -1,4 +1,4 @@
-package edu.bu.met.cs665.gameboard;
+package edu.bu.met.cs665.game.gameboard;
 
 public class HitState implements GridItemState {
     @Override

@@ -1,4 +1,4 @@
-package edu.bu.met.cs665.gameboard;
+package edu.bu.met.cs665.game.gameboard;
 
 import java.awt.*;
 import java.util.Random;
@@ -8,9 +8,21 @@ public class PlayersBoard implements Board {
     public PlayerBoardGridItem[][] getBoard() {
         return board;
     }
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+
+    private int countDown = 0;
+    private boolean gameOver = false;
+
 
     PlayerBoardGridItem[][] board = new PlayerBoardGridItem[5][5]; //base is 5x5;
 
+    /**
+     * initialize the board to an square based on gridSize
+     * @param gridSize - of length and width of grid
+     */
     @Override
     public void setupBoard(int gridSize) {
         board = new PlayerBoardGridItem[gridSize][gridSize];
@@ -22,9 +34,11 @@ public class PlayersBoard implements Board {
         }
     }
 
-    @Override
-    public String displayBoard() {
+
+    public String displayMyBoard() {
         StringBuilder outputBuilder = new StringBuilder();
+        outputBuilder.append("My board:\n");
+
         //build out the outline for the board
         //add top left corner
         outputBuilder.append("/");
@@ -48,18 +62,6 @@ public class PlayersBoard implements Board {
             }
             //add carriage return so we can start next row
             outputBuilder.append("\n");
-//            if (i < board.length - 1){
-//            //add left intersector
-//            outputBuilder.append("|");
-//            //add middle splitter
-//
-//            for (int k = 0; k < board.length - 1; k++) {
-//                outputBuilder.append("__");
-//            }
-//            //add middle right side piece
-//            outputBuilder.append("_|\n");
-//            }
-
         }
         //add bottom left corner
         outputBuilder.append("\\");
@@ -74,6 +76,52 @@ public class PlayersBoard implements Board {
     }
 
     @Override
+    public String displayBoard() {
+        StringBuilder outputBuilder = new StringBuilder();
+        outputBuilder.append("Shots Taken:\n");
+
+        //build out the outline for the board
+        //add top left corner
+        outputBuilder.append("/");
+        //add top bar
+        for (int i = 0; i < board.length - 1; i++) {
+            outputBuilder.append("==");
+        }
+        //add upper right corner
+        outputBuilder.append("=\\\n");
+
+
+        for (int i = 0; i < board.length; i++) {
+            //add left bar
+            outputBuilder.append("|");
+            for (int j = 0; j < board[i].length; j++) {
+                //add the grid item
+                outputBuilder.append(board[i][j].displayItem.toString());
+                //add the separator bar
+                outputBuilder.append("|");
+
+            }
+            //add carriage return so we can start next row
+            outputBuilder.append("\n");
+        }
+        //add bottom left corner
+        outputBuilder.append("\\");
+        //add bottom bar
+        for (int i = 0; i < board.length - 1; i++) {
+            outputBuilder.append("==");
+        }
+        //add bottom right corner
+        outputBuilder.append("=/\n");
+
+        return outputBuilder.toString();
+    }
+
+
+
+    /**
+     * Add a random boat of specific size to the players board
+     * @param boatSize - size of boat
+     */
     public void addRandomBoat(int boatSize) {
         Random rnd = new Random();
         boolean isHoriztonal = rnd.nextBoolean();
@@ -90,7 +138,14 @@ public class PlayersBoard implements Board {
         }
     }
 
-    @Override
+    /**
+     * Add a boat to the board
+     * @param startingPosition - grid coordinate for starting point of boat
+     * @param size - size of boat
+     * @param isHorizontal - is the boat horizontal or vertical
+     * @throws IllegalArgumentException
+     */
+
     public void addPlacedBoat(Point startingPosition, int size, boolean isHorizontal) throws IllegalArgumentException {
         if (!checkPosition(startingPosition, size, isHorizontal))
             throw new IllegalArgumentException("Can't add to this location");
@@ -104,9 +159,17 @@ public class PlayersBoard implements Board {
                 board[startingPosition.x+i][startingPosition.y].setHasBoat(true);
             }
         }
+        this.countDown+=size;
     }
 
-    @Override
+    /**
+     * Verify nothing is in the desire boat position
+     * @param startingPosition - starting location for boat
+     * @param size - length of boat
+     * @param isHorizontal - is boat horizontal or vertical
+     * @return - boolean true if placement is acceptable
+     */
+
     public boolean checkPosition(Point startingPosition, int size, boolean isHorizontal) {
 
         //if we get an index out of bounds exception it can't fit
@@ -135,4 +198,14 @@ public class PlayersBoard implements Board {
 
         return true;
     }
+    @Override
+    public boolean takeShot(Point shot){
+        boolean isHit = this.board[shot.x][shot.y].takeShot();
+        if (isHit) this.countDown--;
+        if(this.countDown <= 0) gameOver = true;
+        return isHit;
+
+    }
+
+
 }

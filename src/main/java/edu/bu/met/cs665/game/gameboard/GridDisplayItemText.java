@@ -1,4 +1,4 @@
-package edu.bu.met.cs665.gameboard;
+package edu.bu.met.cs665.game.gameboard;
 
 //enum to give central location to modify string output for state
 public enum GridDisplayItemText {

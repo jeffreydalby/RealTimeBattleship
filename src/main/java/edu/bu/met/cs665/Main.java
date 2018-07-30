@@ -1,6 +1,6 @@
 package edu.bu.met.cs665;
 
-import edu.bu.met.cs665.gameboard.PlayersBoard;
+import edu.bu.met.cs665.game.gameboard.PlayersBoard;
 
 public class Main {
 

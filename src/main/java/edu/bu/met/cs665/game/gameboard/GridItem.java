@@ -1,6 +1,14 @@
-package edu.bu.met.cs665.gameboard;
+package edu.bu.met.cs665.game.gameboard;
 
 public class GridItem {
+
+    public boolean isHasShip() {
+        return hasShip;
+    }
+
+    public void setHasShip(boolean hasShip) {
+        this.hasShip = hasShip;
+    }
 
     private boolean hasShip;
     GridItemState gridItemState;
@@ -11,13 +19,6 @@ public class GridItem {
         gridItemState = new OpenWaterState();
     }
 
-    /**
-     * Let's the player take a shot and set the state based on if there is a ship here
-     */
-    public void takeShot(){
-        if (hasShip) gridItemState = new HitState();
-        else gridItemState = new MissedShotState();
-    }
 
     @Override
     public String toString() {

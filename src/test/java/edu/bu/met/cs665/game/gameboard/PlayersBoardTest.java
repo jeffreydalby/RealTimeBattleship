@@ -1,4 +1,4 @@
-package edu.bu.met.cs665.gameboard;
+package edu.bu.met.cs665.game.gameboard;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -59,6 +59,7 @@ public class PlayersBoardTest {
         playersBoard.addRandomBoat(1);
         //since things are being randomly generated can't automate this.
         System.out.println(playersBoard.displayBoard());
+        System.out.println((playersBoard.displayMyBoard()));
     }
 
     @Test
@@ -77,5 +78,43 @@ public class PlayersBoardTest {
     public void checkPositionOutofBounds(){
         playersBoard.setupBoard(10);
         Assert.assertFalse(playersBoard.checkPosition(new Point(11,0),5,false));
+    }
+
+    @Test
+    public void takeShotOneHit(){
+        playersBoard.setupBoard(10);
+        playersBoard.addPlacedBoat(new Point(0,0),4,false);
+        playersBoard.takeShot(new Point(0,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        Assert.assertEquals("X", playersBoard.board[0][0].displayItem.toString());
+    }
+    @Test
+    public void takeShotWin(){
+        playersBoard.setupBoard(10);
+        playersBoard.addPlacedBoat(new Point(0,0),4,false);
+        playersBoard.takeShot(new Point(0,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        playersBoard.takeShot(new Point(1,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        playersBoard.takeShot(new Point(2,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        playersBoard.takeShot(new Point(3,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        Assert.assertTrue(playersBoard.isGameOver());
+    }
+
+    @Test
+    public void takeShotOneMiss(){
+        playersBoard.setupBoard(10);
+        playersBoard.addPlacedBoat(new Point(0,0),4,false);
+        playersBoard.takeShot(new Point(5,0));
+        System.out.println(playersBoard.displayMyBoard());
+        System.out.println(playersBoard.displayBoard());
+        Assert.assertEquals("*", playersBoard.board[5][0].displayItem.toString());
     }
 }
