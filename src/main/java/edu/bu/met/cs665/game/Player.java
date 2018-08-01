@@ -5,9 +5,33 @@ import edu.bu.met.cs665.game.gameboard.Board;
 import java.awt.*;
 
 public class Player {
+    public String getName() {
+        return name;
+    }
+
+    public boolean isAssigned() {
+        return assigned;
+    }
+
+    public void setAssigned(boolean assigned) {
+        this.assigned = assigned;
+    }
+
+    public Board getOpponentsBoard() {
+        return opponentsBoard;
+    }
+
     private String name;
+
+    public Board getMyBoard() {
+        return myBoard;
+    }
+
     private Board myBoard;
     private Board opponentsBoard;
+    private boolean assigned;
+
+
 
     public Player(String name, Board myBoard, Board opponentsBoard){
         this.name = name;
@@ -17,12 +41,12 @@ public class Player {
 
     /**
      * We want to show our board which has its boats and then other players shot,
-     * and the opponents display board which won't show boat position but will show
-     * our hits and misses.
+     *      * and the opponents display board which won't show boat position but will show
+     *      * our hits and misses.
      * @return
      */
     public String showBoard(){
-        return name +"\n" + myBoard.displayMyBoard() + "\n" + opponentsBoard.displayBoard();
+        return name +"\r\n" + myBoard.displayMyBoard() + "\r\n" + opponentsBoard.displayBoard();
     }
 
     /**
