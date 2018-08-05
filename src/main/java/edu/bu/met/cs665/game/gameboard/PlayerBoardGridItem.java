@@ -1,34 +1,39 @@
 package edu.bu.met.cs665.game.gameboard;
 
-public class PlayerBoardGridItem extends GridItem{
-    GridItem displayItem;
+//Class for each grid on the players board
+//this allows us to only show boat to the player and not the opponent.
+class PlayerBoardGridItem extends GridItem {
+    GridItem opponentsViewGridItem;
 
-    public boolean isHasBoat() {
-        return displayItem.isHasShip();
+    boolean isHasBoat() {
+        return opponentsViewGridItem.isHasShip();
     }
+
     //once we set has boat on a player's board we want to make sure it displays it with the boat
-    public void setHasBoat(boolean hasBoat) {
-        this.displayItem.setHasShip(hasBoat);
+    void setHasBoat(boolean hasBoat) {
+        this.opponentsViewGridItem.setHasShip(hasBoat);
         this.gridItemState = new MyBoatState();
     }
 
 
-    public PlayerBoardGridItem(){
+    PlayerBoardGridItem() {
         super();
-        this.displayItem = new GridItem();
+        this.opponentsViewGridItem = new GridItem();
     }
 
     /**
-     * Let's the player take a shot and set the state based on if there is a ship here
+     * Lets the player take a shot,then set the state based on if there is a ship here
+     *
+     * @return - true if show is a hit
      */
-    public boolean takeShot(){
-        if (this.displayItem.isHasShip()) {
+    boolean takeShot() {
+        if (this.opponentsViewGridItem.isHasShip()) {
             this.gridItemState = new HitState();
-            this.displayItem.gridItemState = new HitState();
-            return true;}
-        else {
+            this.opponentsViewGridItem.gridItemState = new HitState();
+            return true;
+        } else {
             this.gridItemState = new MissedShotState();
-            this.displayItem.gridItemState = new MissedShotState();
+            this.opponentsViewGridItem.gridItemState = new MissedShotState();
         }
         return false;
     }

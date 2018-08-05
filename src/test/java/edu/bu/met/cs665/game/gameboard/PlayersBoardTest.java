@@ -29,14 +29,14 @@ public class PlayersBoardTest {
     @Test
     public void displayBoard() {
         playersBoard.setupBoard(10);
-        System.out.printf(playersBoard.displayBoard());
+        System.out.printf(playersBoard.displayShotsTaken());
     }
 
     @Test
     public void addPlacedBoatHorizontal() {
         playersBoard.setupBoard(10);
         playersBoard.addPlacedBoat(new Point(0,0),4,true);
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         assertTrue(playersBoard.board[0][3].isHasBoat());
 
     }
@@ -45,7 +45,7 @@ public class PlayersBoardTest {
     public void addPlacedBoatVertical() {
         playersBoard.setupBoard(10);
         playersBoard.addPlacedBoat(new Point(0,0),4,false);
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         assertTrue(playersBoard.board[3][0].isHasBoat());
 
     }
@@ -58,7 +58,7 @@ public class PlayersBoardTest {
         playersBoard.addRandomBoat(5);
         playersBoard.addRandomBoat(1);
         //since things are being randomly generated can't automate this.
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         System.out.println((playersBoard.displayMyBoard()));
     }
 
@@ -86,8 +86,8 @@ public class PlayersBoardTest {
         playersBoard.addPlacedBoat(new Point(0,0),4,false);
         playersBoard.takeShot(new Point(0,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
-        Assert.assertEquals("X", playersBoard.board[0][0].displayItem.toString());
+        System.out.println(playersBoard.displayShotsTaken());
+        Assert.assertEquals("X", playersBoard.board[0][0].opponentsViewGridItem.toString());
     }
     @Test
     public void takeShotWin(){
@@ -95,16 +95,16 @@ public class PlayersBoardTest {
         playersBoard.addPlacedBoat(new Point(0,0),4,false);
         playersBoard.takeShot(new Point(0,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         playersBoard.takeShot(new Point(1,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         playersBoard.takeShot(new Point(2,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         playersBoard.takeShot(new Point(3,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
+        System.out.println(playersBoard.displayShotsTaken());
         Assert.assertTrue(playersBoard.isGameOver());
     }
 
@@ -114,7 +114,7 @@ public class PlayersBoardTest {
         playersBoard.addPlacedBoat(new Point(0,0),4,false);
         playersBoard.takeShot(new Point(5,0));
         System.out.println(playersBoard.displayMyBoard());
-        System.out.println(playersBoard.displayBoard());
-        Assert.assertEquals("*", playersBoard.board[5][0].displayItem.toString());
+        System.out.println(playersBoard.displayShotsTaken());
+        Assert.assertEquals("*", playersBoard.board[5][0].opponentsViewGridItem.toString());
     }
 }

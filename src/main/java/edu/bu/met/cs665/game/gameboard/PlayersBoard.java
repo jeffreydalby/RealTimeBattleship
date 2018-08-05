@@ -36,29 +36,21 @@ public class PlayersBoard implements Board {
         }
     }
 
-
+    /**
+     * Create the players board display string to output
+     *
+     * @return - string containing the players board
+     */
     public String displayMyBoard() {
         StringBuilder outputBuilder = new StringBuilder();
         outputBuilder.append("My board:\r\n");
-
-        //build out the outline for the board
-        //add top left corner
-        outputBuilder.append(" /");
-        //add top bar
-        for (int i = 0; i < board.length; i++) {
-            outputBuilder.append(i);
-            outputBuilder.append("_");
-        }
-        //remove the extra _
-        outputBuilder.deleteCharAt(outputBuilder.length() - 1);
-        //add upper right corner
-        outputBuilder.append("\\\r\n");
-
+        //add the top line
+        outputBuilder.append(buildTopOutline());
 
         for (int i = 0; i < board.length; i++) {
             //add left bar
-            outputBuilder.append(i);
-            outputBuilder.append("|");
+            outputBuilder.append(String.valueOf((char) (i + 65)));
+            outputBuilder.append(" |");
             for (int j = 0; j < board[i].length; j++) {
                 //add the grid item
                 outputBuilder.append(board[i][j].toString());
@@ -69,44 +61,31 @@ public class PlayersBoard implements Board {
             //add carriage return so we can start next row
             outputBuilder.append("\r\n");
         }
-        //add bottom left corner
-        outputBuilder.append(" \\");
-        //add bottom bar
-        for (int i = 0; i < board.length - 1; i++) {
-            outputBuilder.append("==");
-        }
-        //add bottom right corner
-        outputBuilder.append("=/\r\n");
+        //add bottom outline
+        outputBuilder.append(buildBottomOutline());
 
         return outputBuilder.toString();
     }
 
+    /**
+     * Create board to show the opponent which shots have been taken against THIS board.
+     *
+     * @return - board showing shots taken without boat locations.
+     */
     @Override
-    public String displayBoard() {
+    public String displayShotsTaken() {
         StringBuilder outputBuilder = new StringBuilder();
         outputBuilder.append("Shots Taken:\r\n");
-
-        //build out the outline for the board
-        //add top left corner
-        outputBuilder.append(" /");
-        //add top bar
-        for (int i = 0; i < board.length; i++) {
-            outputBuilder.append(i);
-            outputBuilder.append("_");
-        }
-        //remove the extra _
-        outputBuilder.deleteCharAt(outputBuilder.length() - 1);
-        //add upper right corner
-        outputBuilder.append("\\\r\n");
-
+        //add the top line
+        outputBuilder.append(buildTopOutline());
 
         for (int i = 0; i < board.length; i++) {
             //add left bar
-            outputBuilder.append(i);
-            outputBuilder.append("|");
+            outputBuilder.append(String.valueOf((char) (i + 65)));
+            outputBuilder.append(" |");
             for (int j = 0; j < board[i].length; j++) {
-                //add the grid item
-                outputBuilder.append(board[i][j].displayItem.toString());
+                //add the grid item from the opponents View, which does not display boat locations.
+                outputBuilder.append(board[i][j].opponentsViewGridItem.toString());
                 //add the separator bar
 
                 outputBuilder.append("|");
@@ -115,16 +94,50 @@ public class PlayersBoard implements Board {
             //add carriage return so we can start next row
             outputBuilder.append("\r\n");
         }
-        //add bottom left corner
-        outputBuilder.append(" \\");
-        //add bottom bar
-        for (int i = 0; i < board.length - 1; i++) {
-            outputBuilder.append("==");
-        }
-        //add bottom right corner
-        outputBuilder.append("=/\r\n");
+        //add bottom outline
+        outputBuilder.append(buildBottomOutline());
 
         return outputBuilder.toString();
+    }
+
+    /**
+     * Create the top bar for the boards display
+     *
+     * @return - top bar
+     */
+    private String buildTopOutline() {
+        StringBuilder topOutLine = new StringBuilder();
+        //build out the outline for the board
+        //add top left corner
+        topOutLine.append(" /_");
+        //add top bar
+        for (int i = 0; i < board.length; i++) {
+            topOutLine.append(i + 1);
+            topOutLine.append("_");
+        }
+        //remove the extra _
+        topOutLine.deleteCharAt(topOutLine.length() - 1);
+        //add upper right corner
+        topOutLine.append("\\\r\n");
+        return topOutLine.toString();
+    }
+
+    /**
+     * Build the bottom bar to display
+     *
+     * @return - bottom bar
+     */
+    private String buildBottomOutline() {
+        StringBuilder bottomOutline = new StringBuilder();
+        //add bottom left corner
+        bottomOutline.append(" \\=");
+        //add bottom bar
+        for (int i = 0; i < board.length - 1; i++) {
+            bottomOutline.append("==");
+        }
+        //add bottom right corner
+        bottomOutline.append("==/\r\n");
+        return bottomOutline.toString();
     }
 
 
@@ -136,7 +149,7 @@ public class PlayersBoard implements Board {
     public void addRandomBoat(int boatSize) {
         Random rnd = new Random();
         boolean isHoriztonal = rnd.nextBoolean();
-        Point randomPlacement = new Point(0, 0);
+        Point randomPlacement;
 
         while (true) {
             //find a random position taking into account boat size
@@ -158,10 +171,10 @@ public class PlayersBoard implements Board {
      * @param startingPosition - grid coordinate for starting point of boat
      * @param size             - size of boat
      * @param isHorizontal     - is the boat horizontal or vertical
-     * @throws IllegalArgumentException
+     * @throws - IllegalArgumentException
      */
 
-    public void addPlacedBoat(Point startingPosition, int size, boolean isHorizontal) throws IllegalArgumentException {
+    void addPlacedBoat(Point startingPosition, int size, boolean isHorizontal) throws IllegalArgumentException {
         if (!checkPosition(startingPosition, size, isHorizontal))
             throw new IllegalArgumentException("Can't add to this location");
         if (isHorizontal) {
@@ -185,7 +198,7 @@ public class PlayersBoard implements Board {
      * @return - boolean true if placement is acceptable
      */
 
-    public boolean checkPosition(Point startingPosition, int size, boolean isHorizontal) {
+    boolean checkPosition(Point startingPosition, int size, boolean isHorizontal) {
 
         //if we get an index out of bounds exception it can't fit
         try {
@@ -214,11 +227,17 @@ public class PlayersBoard implements Board {
         return true;
     }
 
+    /**
+     * Take a shot agains this board
+     *
+     * @param shot - Point at which to take shot
+     * @return - return True if hit.
+     */
     @Override
     public boolean takeShot(Point shot) {
-        boolean isHit = this.board[shot.x][shot.y].takeShot();
-        if (isHit) this.countDown--;
-        if (this.countDown <= 0) gameOver = true;
+        boolean isHit = this.board[shot.x][shot.y].takeShot(); //call take shot on the grid item
+        if (isHit) this.countDown--; //decrement counter so we know if the game is over
+        if (this.countDown <= 0) gameOver = true; //flag game over if we are out of places to hit
         return isHit;
 
     }
